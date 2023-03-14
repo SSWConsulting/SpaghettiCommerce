@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RubeGoldbergCommerce.Data;
+using RubeGoldbergCommerce.Models;
 
 namespace RubeGoldbergCommerce.Controllers;
 
@@ -6,7 +9,21 @@ namespace RubeGoldbergCommerce.Controllers;
 [Route("[controller]")]
 public class CustomerController : ControllerBase
 {
-    // Get orders (customer ID)
+    private readonly AppDbContext _context;
 
-    // this one will get customer by ID and then return their orders
+    public CustomerController(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    [HttpGet("{id}/orders")]
+    public async Task<ActionResult<List<Order>>> GetOrders(int id)
+    {
+        var orders = await _context.Customers
+            .Where(c => c.Id == id)
+            .Select(c => c.Orders)
+            .FirstOrDefaultAsync();
+
+        return Ok(orders);
+    }
 }

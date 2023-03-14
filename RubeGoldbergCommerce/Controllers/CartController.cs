@@ -24,7 +24,7 @@ public class CartController : ControllerBase
         return Ok(cart);
     }
 
-    [HttpPut("{cartId/productId/count}")]
+    [HttpPut("{cartId}/{productId}/{count}")]
     public async Task<ActionResult> Put(int cartId, int productId, int count)
     {
         var cart = await _context.Carts.FindAsync(cartId);
@@ -57,7 +57,7 @@ public class CartController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("{cartId/productId}")]
+    [HttpDelete("{cartId}/{productId}")]
     public async Task<ActionResult> Delete(int cartId, int productId)
     {
         var cart = await _context.Carts

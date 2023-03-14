@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RubeGoldbergCommerce.Services;
 
 namespace RubeGoldbergCommerce.Controllers;
 
@@ -6,10 +7,35 @@ namespace RubeGoldbergCommerce.Controllers;
 [Route("[controller]")]
 public class OrderController : ControllerBase
 {
-    // Checkout (cart ID)
+    private readonly IOrderService _orderService;
 
-    // Get order (ID)
+    public OrderController(IOrderService orderService)
+    {
+        _orderService = orderService;
+    }
 
-    // Get orders (customer ID)
-    // This one will return all orders where customer id = id
+    [HttpPost]
+    public async Task<ActionResult<string>> Checkout(int cartId, string cardNumber, string cardExpiry, string cvv)
+    {
+        var result = await _orderService.Checkout(cartId, cardNumber, cardExpiry, cvv);
+
+        return Ok(result);
+    }
+
+    
+    [HttpGet("{id}")]
+    public async Task<ActionResult<string>> GetOrder(int id)
+    {
+        var order = await _orderService.GetOrder(id);
+
+        return Ok(order);
+    }
+    
+    [HttpGet("customer/{id}")]
+    public async Task<ActionResult<string>> GetOrders(int id)
+    {
+        var orders = await _orderService.GetCustomerOrders(id);
+
+        return Ok(orders);
+    }
 }
