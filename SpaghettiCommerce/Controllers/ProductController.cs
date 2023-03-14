@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SpaghettiCommerce.Products;
 
 namespace SpaghettiCommerce.Controllers;
 
@@ -6,9 +7,26 @@ namespace SpaghettiCommerce.Controllers;
 [Route("[controller]")]
 public class ProductController : ControllerBase
 {
-    // Get Product (id)
+    private readonly IProductService _productService;
 
-    // Search Product (name)
+    public ProductController(IProductService productService)
+    {
+        _productService = productService;
+    }
 
-    // Add product
+    [HttpGet("{id}")]
+    public async Task<ActionResult<string>> GetProduct(int id)
+    {
+        var product = await _productService.GetProduct(id);
+
+        return Ok(product);
+    }
+
+    [HttpGet("search/{searchTerm}")]
+    public async Task<ActionResult<string>> SearchProducts(string searchTerm)
+    {
+        var products = await _productService.SearchProducts(searchTerm);
+
+        return Ok(products);
+    }
 }
